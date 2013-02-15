@@ -275,12 +275,15 @@
         android:id="@+id/page5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:orientation="vertical" >
 
         <ListView
             android:id="@+id/ListViewId"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:clickable="true" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -20,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".SocialService"
+            android:enabled="true"
+            android:label="SocialService" >
+        </service>
     </application>
 
     <uses-sdk

@@ -1,10 +1,7 @@
 package esi.delegacion.haydelegacion;
 
-import java.util.ArrayList;
-
-import org.json.JSONException;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +17,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.ViewFlipper;
 
@@ -28,11 +24,15 @@ public class Main extends Activity {
 
 	float init_x;
 
+	Context context;
+
 	ViewFlipper flipper;
 	FrameLayout page1;
 	ScrollView page2, page3;
 	LinearLayout page4, page5, page6;
 
+	SocialService socialSevice;
+	
 	EditText mailBody;
 
 	ImageView toTwitter, toFacebook, toTuenti;
@@ -57,7 +57,7 @@ public class Main extends Activity {
 		toTuenti = (ImageView) findViewById(R.id.toTuenti);
 
 		mailBody = (EditText) findViewById(R.id.mailbody);
-
+		
 		page1.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -150,20 +150,8 @@ public class Main extends Activity {
 			}
 		});
 
-		ArrayList<Tweet> tweets = null;
-		try {
-			tweets = Tweet.getTweets("esiHD", 1);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		if (tweets != null) {
-			ListView listView = (ListView) findViewById(R.id.ListViewId);
-			listView.setAdapter(new TweetItemAdapter(this,
-					R.layout.tweet_layout, tweets));
-		}
-
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,6 +248,20 @@ public class Main extends Activity {
 				flipper.showPrevious();
 			}
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		stopService(new Intent(this, SocialService.class));
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startService(new Intent(this, SocialService.class));
+
 	}
 
 }

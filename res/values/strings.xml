@@ -2,8 +2,7 @@
 <resources>
 
     <string name="app_name">HayDelegacion</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_settings">Próximamente más</string>
     <string name="SliceImage">Slice Image</string>
     <string name="programa">Programa:</string>
     <string name="programa1">- Mejora la atención a los alumnos, para ello mantendremos la delegación siempre abierta.</string>
@@ -30,7 +29,13 @@
     <string name="ContactaForm">Envianos un email. Escribe aquí.</string>
     <string name="ContactaEnviar">Enviar</string>
     <string name="QuienesSomosTitulo">¿Quienes somos?</string>
-    <string name="QuienesSomosTexto">Somos un grupo de estudiantes cansados de ser ignorados y tratados como borregos por la actual delegación de alumnos. Es por eso que creemos que la Escuela de Ingenieros merece a unos representantes a la altura de sus estudiantes, nosotros somos personas que dedicamos todo nuestro tiempo a luchar por un sueño aunque parezca imposible y hemos decidido cambiar la delegación de la ESI por completo. \\n Nuestras carreras son complicadas y es por ello que la colaboración de la delegación de alumnos para resolver los problemas de los alumnos es algo muy importante y creemos que se necesitan personas dispuestas a poner todo su empeño en mejorar su funcionamiento para que les sea útil a los alumnos.</string>
+    <string name="QuienesSomosTexto">Somos un grupo de estudiantes cansados de ser ignorados y tratados como borregos por la actual delegación de alumnos. Es por eso que creemos que la Escuela de Ingenieros merece a unos representantes a la altura de sus estudiantes, nosotros somos personas que dedicamos todo nuestro tiempo a luchar por un sueño aunque parezca imposible y hemos decidido cambiar la delegación de la ESI por completo. \n Nuestras carreras son complicadas y es por ello que la colaboración de la delegación de alumnos para resolver los problemas de los alumnos es algo muy importante y creemos que se necesitan personas dispuestas a poner todo su empeño en mejorar su funcionamiento para que les sea útil a los alumnos.</string>
     <string name="tuenti">Tuenti:</string>
+    <string name="load_tweets">Cargar tweets</string>
+    <string name="imageprofiletwitter">Imagen de perfil de Twitter</string>
+    <string name="updatetime">"Última actualización: "</string>
+    <string name="updatebutton">Boton de Actualizar</string>
+    <string name="update">Actualizar</string>
+    <string name="OurTwitterSection">Últimos twits:</string>
 
 </resources>

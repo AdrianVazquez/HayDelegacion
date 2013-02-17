@@ -30,41 +30,40 @@ public class Tweet {
 	public static ArrayList<Tweet> getTweets(String searchTerm, int page) throws JSONException {
 		String searchUrl = "http://search.twitter.com/search.json?q=@"
 				+ searchTerm + "&rpp=100&page=" + page;
-		
+
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 
-	    HttpClient client = new DefaultHttpClient();
-	    HttpGet get = new HttpGet(searchUrl);
+		HttpClient client = new DefaultHttpClient();
+		HttpGet get = new HttpGet(searchUrl);
 
-	    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-	    String responseBody = null;
-	    try {
-	        responseBody = client.execute(get, responseHandler);
-	    } catch (Exception ex) {
-	        ex.printStackTrace();
-	    }
+		String responseBody = null;
+		try {
+			responseBody = client.execute(get, responseHandler);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-	    JSONObject jsonObject = new JSONObject(responseBody);
-
-	    JSONArray arr = null;
-
-	    try {
-	        arr = jsonObject.getJSONArray("results");
-	    } catch (Exception ex) {
-	        Log.v("TEST", "Exception: " + ex.getMessage());
-	    }
-
-	    for (int i = 0; i < arr.length(); i++) {
-	    	Tweet tweet = new Tweet(
-                    (arr.getJSONObject(i).get("from_user").toString()),
-                    (arr.getJSONObject(i).get("text").toString()),
-                    (arr.getJSONObject(i).get("profile_image_url").toString()));
-                    tweets.add(tweet);
-	    }
-
-	    return tweets;
+		JSONObject jsonObject = new JSONObject(responseBody);
 		
+		JSONArray arr = null;
+
+		try {
+			Object j = jsonObject.get("results");
+			arr = (JSONArray) j;
+		} catch (Exception ex) {
+			Log.v("TEST", "Exception: " + ex.getMessage());
+		}
+
+		for ( int i=0 ; i<arr.length() ; i++ ) {
+			Tweet tweet = new Tweet(arr.getJSONObject(i).get("from_user")
+					.toString(), arr.getJSONObject(i).get("text").toString(),
+					arr.getJSONObject(i).get("profile_image_url").toString());
+			tweets.add(tweet);
+		}
+
+		return tweets;
 	}
 
 	public static Bitmap getBitmap(String bitmapUrl) {

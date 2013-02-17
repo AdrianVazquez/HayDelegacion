@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.ViewFlipper;
 
@@ -29,20 +30,24 @@ public class Main extends Activity {
 	ViewFlipper flipper;
 	FrameLayout page1;
 	ScrollView page2, page3;
-	LinearLayout page4, page5, page6;
-
-	SocialService socialSevice;
-	
+	LinearLayout page4, page6, page5;
+	ListView tweetlist;
 	EditText mailBody;
-
 	ImageView toTwitter, toFacebook, toTuenti;
-
 	Button sendButton;
+	Button updateButton;
+
+	SocialThread socialThread;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		context = this;
+
+		socialThread = new SocialThread(this);
+
 		flipper = (ViewFlipper) findViewById(R.id.mainFlipper);
 		page1 = (FrameLayout) findViewById(R.id.page1);
 		page2 = (ScrollView) findViewById(R.id.page2);
@@ -51,13 +56,16 @@ public class Main extends Activity {
 		page5 = (LinearLayout) findViewById(R.id.page5);
 		page6 = (LinearLayout) findViewById(R.id.page6);
 
+		tweetlist = (ListView) findViewById(R.id.TweetList);
+
 		sendButton = (Button) findViewById(R.id.enviar);
+		updateButton = (Button) findViewById(R.id.updatebuttontwitter);
 		toTwitter = (ImageView) findViewById(R.id.totwitter);
 		toFacebook = (ImageView) findViewById(R.id.toface);
 		toTuenti = (ImageView) findViewById(R.id.toTuenti);
 
 		mailBody = (EditText) findViewById(R.id.mailbody);
-		
+
 		page1.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -101,7 +109,7 @@ public class Main extends Activity {
 		page5.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
-				flip2(event);
+				flip(event);
 				return false;
 			}
 		});
@@ -110,6 +118,14 @@ public class Main extends Activity {
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
 				flip(event);
+				return false;
+			}
+		});
+
+		tweetlist.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent event) {
+				flip2(event);
 				return false;
 			}
 		});
@@ -150,14 +166,15 @@ public class Main extends Activity {
 			}
 		});
 
-	}
+		updateButton.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				socialThread.loadTweets();
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
+			}
+		});
+
 	}
 
 	public void goToFacebook() {
@@ -229,7 +246,7 @@ public class Main extends Activity {
 
 		case MotionEvent.ACTION_UP:
 			float fin_x = event.getX();
-			if (init_x - fin_x > 100) {
+			if (init_x - fin_x > 120) {
 				Animation animationFlipIn = AnimationUtils.loadAnimation(this,
 						R.anim.flipin2);
 				Animation animationFlipOut = AnimationUtils.loadAnimation(this,
@@ -238,7 +255,7 @@ public class Main extends Activity {
 				flipper.setOutAnimation(animationFlipOut);
 				flipper.showNext();
 			}
-			if (init_x - fin_x < -100) {
+			if (init_x - fin_x < -120) {
 				Animation animationFlipIn = AnimationUtils.loadAnimation(this,
 						R.anim.flipin);
 				Animation animationFlipOut = AnimationUtils.loadAnimation(this,
@@ -251,17 +268,41 @@ public class Main extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		stopService(new Intent(this, SocialService.class));
-
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		startService(new Intent(this, SocialService.class));
+		try {
+			socialThread.start();
+		} catch (RuntimeException e) {
+		}
 
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		try {
+			socialThread.stop();
+		} catch (RuntimeException e) {
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		boolean retry = true;
+		while (retry) {
+			try {
+				socialThread.join();
+				retry = false;
+			} catch (Exception e) {
+			}
+		}
 	}
 
 }

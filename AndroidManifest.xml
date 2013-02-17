@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="esi.delegacion.haydelegacion"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="5"
+    android:versionName="1.3.0" >
 
     <application
         android:allowBackup="true"
@@ -22,14 +22,14 @@
         </activity>
 
         <service
-            android:name=".SocialService"
+            android:name=".ServicioTest"
             android:enabled="true"
             android:label="SocialService" >
         </service>
     </application>
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="8"
         android:targetSdkVersion="9" />
 
     <uses-permission android:name="android.permission.INTERNET" />

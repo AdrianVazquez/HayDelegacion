@@ -17,9 +17,14 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class Tweet {
+
 	public String username;
 	public String message;
 	public String image_url;
+	public Boolean usernameSet = false;
+	public Boolean messageSet = false;
+	public Boolean imageSet = false;
+	public Bitmap avatar;
 
 	public Tweet(String username, String message, String url) {
 		this.username = username;
@@ -29,7 +34,7 @@ public class Tweet {
 
 	public static ArrayList<Tweet> getTweets(String searchTerm, int page) throws JSONException {
 		String searchUrl = "http://search.twitter.com/search.json?q=@"
-				+ searchTerm + "&rpp=100&page=" + page;
+				+ searchTerm + "&rpp=25&page=" + page;
 
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 
@@ -45,8 +50,14 @@ public class Tweet {
 			ex.printStackTrace();
 		}
 
-		JSONObject jsonObject = new JSONObject(responseBody);
-		
+		JSONObject jsonObject = null;
+
+		try {
+			jsonObject = new JSONObject(responseBody);
+		} catch (Exception ex) {
+			Log.v("TEST", "Exception: " + ex.getMessage());
+		}
+
 		JSONArray arr = null;
 
 		try {
@@ -56,7 +67,7 @@ public class Tweet {
 			Log.v("TEST", "Exception: " + ex.getMessage());
 		}
 
-		for ( int i=0 ; i<arr.length() ; i++ ) {
+		for (int i = 0; i < arr.length(); i++) {
 			Tweet tweet = new Tweet(arr.getJSONObject(i).get("from_user")
 					.toString(), arr.getJSONObject(i).get("text").toString(),
 					arr.getJSONObject(i).get("profile_image_url").toString());

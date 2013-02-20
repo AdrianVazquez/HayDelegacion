@@ -3,6 +3,8 @@ package esi.delegacion.haydelegacion;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,7 +38,7 @@ public class Main extends Activity {
 	EditText mailBody;
 	ImageView toTwitter, toFacebook, toTuenti;
 	Button sendButton;
-	Button updateButton;
+	ImageButton updateButton;
 
 	SocialThread socialThread;
 
@@ -45,8 +48,6 @@ public class Main extends Activity {
 		setContentView(R.layout.activity_main);
 
 		context = this;
-
-		socialThread = new SocialThread(this);
 
 		flipper = (ViewFlipper) findViewById(R.id.mainFlipper);
 		page1 = (FrameLayout) findViewById(R.id.page1);
@@ -59,12 +60,14 @@ public class Main extends Activity {
 		tweetlist = (ListView) findViewById(R.id.TweetList);
 
 		sendButton = (Button) findViewById(R.id.enviar);
-		updateButton = (Button) findViewById(R.id.updatebuttontwitter);
+		updateButton = (ImageButton) findViewById(R.id.updatebuttontwitter);
 		toTwitter = (ImageView) findViewById(R.id.totwitter);
 		toFacebook = (ImageView) findViewById(R.id.toface);
 		toTuenti = (ImageView) findViewById(R.id.toTuenti);
 
 		mailBody = (EditText) findViewById(R.id.mailbody);
+
+		socialThread = new SocialThread(this);
 
 		page1.setOnTouchListener(new OnTouchListener() {
 
@@ -170,7 +173,11 @@ public class Main extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				socialThread.loadTweets();
+				if (isOnline()) {
+					
+				} else {
+					DialogHelper.noConnectionDialog(context).show();
+				}
 
 			}
 		});
@@ -178,22 +185,31 @@ public class Main extends Activity {
 	}
 
 	public void goToFacebook() {
-		Uri uri = Uri.parse("https://www.facebook.com/HayDelegacionEsiHd");
-		Intent i = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(i);
+		if (isOnline()) {
+			Uri uri = Uri.parse("https://www.facebook.com/HayDelegacionEsiHd");
+			Intent i = new Intent(Intent.ACTION_VIEW, uri);
+			startActivity(i);
+		} else
+			DialogHelper.noConnectionDialog(this).show();
 	}
 
 	public void goToTwitter() {
-		Uri uri = Uri.parse("https://twitter.com/esiHD");
-		Intent i = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(i);
+		if (isOnline()) {
+			Uri uri = Uri.parse("https://twitter.com/esiHD");
+			Intent i = new Intent(Intent.ACTION_VIEW, uri);
+			startActivity(i);
+		} else
+			DialogHelper.noConnectionDialog(this).show();
 	}
 
 	public void goToTuenti() {
-		Uri uri = Uri
-				.parse("http://www.tuenti.com/#m=Page&func=index&page_key=1_2702_62148087");
-		Intent i = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(i);
+		if (isOnline()) {
+			Uri uri = Uri
+					.parse("http://www.tuenti.com/#m=Page&func=index&page_key=1_2702_62148087");
+			Intent i = new Intent(Intent.ACTION_VIEW, uri);
+			startActivity(i);
+		} else
+			DialogHelper.noConnectionDialog(this).show();
 	}
 
 	public void sendEmail() {
@@ -279,6 +295,7 @@ public class Main extends Activity {
 		try {
 			socialThread.start();
 		} catch (RuntimeException e) {
+		} catch (Exception e) {
 		}
 
 	}
@@ -289,6 +306,7 @@ public class Main extends Activity {
 		try {
 			socialThread.stop();
 		} catch (RuntimeException e) {
+		} catch (Exception e) {
 		}
 	}
 
@@ -303,6 +321,25 @@ public class Main extends Activity {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	public boolean isOnline() {
+
+		Context context = getApplicationContext();
+		ConnectivityManager connectivity = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivity != null) {
+			NetworkInfo[] info = connectivity.getAllNetworkInfo();
+			if (info != null) {
+				for (int i = 0; i < info.length; i++) {
+					if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+
 	}
 
 }
